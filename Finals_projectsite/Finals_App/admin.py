@@ -1,9 +1,37 @@
 from django.contrib import admin
 from .models import Profile, Course, Room, Semester, Enrolled, Schedule
 
-admin.site.register(Profile)
-admin.site.register(Course)
-admin.site.register(Room)
-admin.site.register(Semester)
-admin.site.register(Enrolled)
-admin.site.register(Schedule)
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'student_no')
+    search_fields = ('user__username', 'student_no')
+
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('course_code', 'title', 'lec_units', 'lab_units')
+    search_fields = ('course_code', 'title')
+    list_filter = ('lec_units', 'lab_units')
+
+@admin.register(Room)
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('name', 'building')
+    search_fields = ('name', 'building')
+    list_filter = ('building',)
+
+@admin.register(Semester)
+class SemesterAdmin(admin.ModelAdmin):
+    list_display = ('semester_name', 'school_year')
+    search_fields = ('semester_name', 'school_year')
+    list_filter = ('semester_name', 'school_year')
+
+@admin.register(Enrolled)
+class EnrolledAdmin(admin.ModelAdmin):
+    list_display = ('course', 'profile', 'semester', 'teacher_fname', 'teacher_lname')
+    search_fields = ('course__course_code', 'profile__user__username', 'semester__semester_name')
+    list_filter = ('semester',)
+
+@admin.register(Schedule)
+class ScheduleAdmin(admin.ModelAdmin):
+    list_display = ('enrolled', 'day_of_week', 'start_time', 'end_time', 'room')
+    search_fields = ('enrolled__course__course_code', 'enrolled__profile__user__username', 'enrolled__semester__semester_name')
+    list_filter = ('day_of_week',)
