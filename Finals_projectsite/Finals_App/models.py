@@ -9,21 +9,6 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
-
-class Profile(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    student_no = models.CharField(
-        max_length=20,
-        unique=True,
-        blank=True,
-        null=True
-    )
-
-    def __str__(self):
-        return self.user.username
-
-
 class Course(BaseModel):
     course_code = models.CharField(max_length=50, unique=True)
     title = models.CharField(max_length=255)
@@ -52,7 +37,7 @@ class Semester(BaseModel):
 
 class Enrolled(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
 
     teacher_fname = models.CharField(max_length=255, blank=True, null=True)
@@ -62,11 +47,11 @@ class Enrolled(BaseModel):
 
     class Meta:
         verbose_name_plural = "Enrolled"
-        unique_together = ('course', 'profile', 'semester')
+        unique_together = ('course', 'user', 'semester')
 
     def __str__(self):
-        return f"{self.profile.user.username} enrolled in {self.course.course_code} for {self.semester.semester_name} {self.semester.school_year}"
-    
+        return f"{self.user.username} enrolled in {self.course.course_code} for {self.semester.semester_name} {self.semester.school_year}"
+
 class Schedule(BaseModel):
     start_time = models.TimeField()
     end_time = models.TimeField()
