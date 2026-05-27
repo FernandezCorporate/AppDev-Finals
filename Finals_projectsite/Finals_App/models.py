@@ -9,6 +9,7 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+# Predefined courses from BSIT prospectus 
 class Course(BaseModel):
     course_code = models.CharField(max_length=50, unique=True)
     title = models.CharField(max_length=255)
@@ -17,14 +18,6 @@ class Course(BaseModel):
 
     def __str__(self):
         return f"{self.course_code} - {self.title}"
-
-
-class Room(BaseModel):
-    name = models.CharField(max_length=10, unique=True)
-    building = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f"{self.building} {self.name}"
 
 
 class Semester(BaseModel):
@@ -64,9 +57,9 @@ class Schedule(BaseModel):
         ('Saturday', 'Saturday'),
         ('Sunday', 'Sunday'),
     ], default='Monday')
+    room = models.CharField(max_length=255, blank=True, null=True)
 
     enrolled = models.ForeignKey(Enrolled, on_delete=models.CASCADE, null=True, blank=True)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('day_of_week', 'start_time', 'room')

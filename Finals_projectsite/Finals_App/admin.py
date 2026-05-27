@@ -1,17 +1,11 @@
 from django.contrib import admin
-from .models import Course, Room, Semester, Enrolled, Schedule
+from .models import Course, Semester, Enrolled, Schedule
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('course_code', 'title', 'lec_units', 'lab_units')
     search_fields = ('course_code', 'title')
     list_filter = ('lec_units', 'lab_units')
-
-@admin.register(Room)
-class RoomAdmin(admin.ModelAdmin):
-    list_display = ('name', 'building')
-    search_fields = ('name', 'building')
-    list_filter = ('building',)
 
 @admin.register(Semester)
 class SemesterAdmin(admin.ModelAdmin):
