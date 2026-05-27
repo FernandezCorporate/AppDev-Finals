@@ -30,6 +30,7 @@ class Room(BaseModel):
 class Semester(BaseModel):
     semester_name = models.CharField(max_length=20)
     school_year = models.CharField(max_length=20)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.semester_name} {self.school_year}"
@@ -37,7 +38,6 @@ class Semester(BaseModel):
 
 class Enrolled(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
 
     teacher_fname = models.CharField(max_length=255, blank=True, null=True)
@@ -47,10 +47,10 @@ class Enrolled(BaseModel):
 
     class Meta:
         verbose_name_plural = "Enrolled"
-        unique_together = ('course', 'user', 'semester')
+        unique_together = ('course', 'semester')
 
     def __str__(self):
-        return f"{self.user.username} enrolled in {self.course.course_code} for {self.semester.semester_name} {self.semester.school_year}"
+        return f"{self.course.course_code} in {self.semester.semester_name} {self.semester.school_year}"
 
 class Schedule(BaseModel):
     start_time = models.TimeField()

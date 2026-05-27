@@ -21,12 +21,12 @@ class SemesterAdmin(admin.ModelAdmin):
 
 @admin.register(Enrolled)
 class EnrolledAdmin(admin.ModelAdmin):
-    list_display = ('course', 'user', 'semester', 'teacher_fname', 'teacher_lname')
-    search_fields = ('course__course_code', 'user__username', 'semester__semester_name')
+    list_display = ('course', 'semester', 'teacher_fname', 'teacher_lname')
+    search_fields = ('course__course_code', 'semester__semester_name')
     list_filter = ('semester',)
 
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
     list_display = ('enrolled', 'day_of_week', 'start_time', 'end_time', 'room')
-    search_fields = ('enrolled__course__course_code', 'enrolled__user__username', 'enrolled__semester__semester_name')
+    search_fields = ('enrolled__course__course_code', 'enrolled__semester__semester_name')
     list_filter = ('day_of_week',)
