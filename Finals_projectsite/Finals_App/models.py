@@ -22,7 +22,8 @@ class Course(BaseModel):
 
 class Semester(BaseModel):
     semester_name = models.CharField(max_length=20)
-    school_year = models.CharField(max_length=20)
+    year_start = models.IntegerField()
+    year_end = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

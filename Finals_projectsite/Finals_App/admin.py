@@ -9,9 +9,9 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Semester)
 class SemesterAdmin(admin.ModelAdmin):
-    list_display = ('semester_name', 'school_year')
-    search_fields = ('semester_name', 'school_year')
-    list_filter = ('semester_name', 'school_year')
+    list_display = ('semester_name', 'year_start', 'year_end', 'user')
+    search_fields = ('semester_name', 'year_start', 'year_end', 'user')
+    list_filter = ('semester_name', 'year_start', 'year_end', 'user')
 
 @admin.register(Enrolled)
 class EnrolledAdmin(admin.ModelAdmin):
