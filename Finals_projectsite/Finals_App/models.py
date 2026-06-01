@@ -27,7 +27,7 @@ class Semester(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.semester_name} {self.school_year}"
+        return f"{self.semester_name} {self.year_start}-{self.year_end}"
     
 
 class Enrolled(BaseModel):
