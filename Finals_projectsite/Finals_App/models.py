@@ -44,7 +44,7 @@ class Enrolled(BaseModel):
         unique_together = ('course', 'semester')
 
     def __str__(self):
-        return f"{self.course.course_code} in {self.semester.semester_name} {self.semester.school_year}"
+        return f"{self.course.course_code} in {self.semester.semester_name} {self.semester.year_start}-{self.semester.year_end}"
 
 class Schedule(BaseModel):
     start_time = models.TimeField()
