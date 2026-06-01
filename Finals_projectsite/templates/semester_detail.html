@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ semester.name }}</h1>
+
+<p>School Year: {{ semester.school_year }}</p>
+
+<a href="{% url 'home' %}">Back</a>
+{% endblock %}
