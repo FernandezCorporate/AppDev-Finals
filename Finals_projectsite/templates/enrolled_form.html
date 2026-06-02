@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if object %}Edit Enrolled Course{% else %}Add Enrolled Course{% endif %}
+{% endblock %}
+
+{% block page_title %}
+    {% if object %}Edit Enrolled Course{% else %}Add Enrolled Course{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+
+        <div class="card card-custom">
+            <div class="card-body p-4">
+
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-1">
+                        {% if object %}Edit Enrolled Course{% else %}Add Enrolled Course{% endif %}
+                    </h5>
+                    <small class="text-muted">
+                        {% if object %}Update course enrollment details.{% else %}Add a course to this semester.{% endif %}
+                    </small>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Course</label>
+                        <select name="course" class="form-select" required>
+                            <option value="">-- Select Course --</option>
+                            {% for course in form.course.field.queryset %}
+                            <option value="{{ course.pk }}"
+                                {% if form.course.value|stringformat:"s" == course.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ course }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.course.errors %}
+                            <div class="text-danger small mt-1">{{ form.course.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Teacher First Name</label>
+                            <input type="text"
+                                   name="teacher_fname"
+                                   class="form-control"
+                                   placeholder="e.g. Maria"
+                                   value="{{ form.teacher_fname.value|default:'' }}">
+                            {% if form.teacher_fname.errors %}
+                                <div class="text-danger small mt-1">{{ form.teacher_fname.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Teacher Last Name</label>
+                            <input type="text"
+                                   name="teacher_lname"
+                                   class="form-control"
+                                   placeholder="e.g. Santos"
+                                   value="{{ form.teacher_lname.value|default:'' }}">
+                            {% if form.teacher_lname.errors %}
+                                <div class="text-danger small mt-1">{{ form.teacher_lname.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Final Grade <span class="text-muted fw-normal">(optional)</span></label>
+                        <input type="number"
+                               name="final_grade"
+                               class="form-control"
+                               placeholder="e.g. 1.25"
+                               step="0.01"
+                               value="{{ form.final_grade.value|default:'' }}">
+                        {% if form.final_grade.errors %}
+                            <div class="text-danger small mt-1">{{ form.final_grade.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-green px-4">
+                            {% if object %}Save Changes{% else %}Add Course{% endif %}
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

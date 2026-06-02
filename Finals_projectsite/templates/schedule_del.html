@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Schedule{% endblock %}
+
+{% block page_title %}Delete Schedule{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+
+        <div class="card card-custom">
+            <div class="card-body p-4 text-center">
+
+                <i class="bi bi-exclamation-triangle-fill text-danger mb-3"
+                   style="font-size: 3rem;"></i>
+
+                <h5 class="fw-bold mb-2">Delete Schedule</h5>
+
+                <p class="text-muted mb-1">You are about to delete:</p>
+
+                <h6 class="fw-bold text-danger mb-1">
+                    {{ object.enrolled.course.course_code }} — {{ object.day_of_week }}
+                </h6>
+
+                <p class="text-muted small mb-4">
+                    {{ object.start_time }} – {{ object.end_time }} | {{ object.room|default:"No room" }}
+                </p>
+
+                <div class="alert alert-danger text-start small py-2">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    This action cannot be undone.
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2 justify-content-center mt-3">
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="bi bi-trash-fill me-1"></i>
+                            Yes, Delete
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4">
+                            <i class="bi bi-x-lg me-1"></i>
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
