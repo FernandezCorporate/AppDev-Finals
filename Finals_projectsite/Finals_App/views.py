@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-
+from collections import defaultdict
 from Finals_App.models import Semester, Enrolled, Schedule
 from Finals_App.forms import EnrolledForm, ScheduleForm
 
@@ -22,12 +22,22 @@ class SemesterDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['enrolled_list'] = (
-            Enrolled.objects
-            .filter(semester=self.object)
-            .prefetch_related('schedule_set', 'course')
-            .order_by('course__course_code')
+        
+        day_order = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+        
+        grouped = defaultdict(list)
+        schedules = (
+            Schedule.objects
+            .filter(enrolled__semester=self.object)
+            .select_related('enrolled__course')
+            .order_by('start_time')
         )
+        for sched in schedules:
+            grouped[sched.day_of_week].append(sched)
+
+        context['grouped_schedules'] = {
+            day: grouped[day] for day in day_order if day in grouped
+        }
         return context
 
 class SemesterCreateView(CreateView):
@@ -91,3 +101,4 @@ class ScheduleDeleteView(DeleteView):
     model = Schedule
     template_name = 'schedule_del.html'
     success_url = reverse_lazy('home')
+

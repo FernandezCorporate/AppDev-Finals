@@ -10,6 +10,28 @@
 
 {% block css %}
 <style>
+
+    .schedule-table td.day-cell {
+        font-weight: 700;
+        font-size: .95rem;
+        color: #1b5e20;
+        vertical-align: middle;
+        text-align: center;
+        background: #f1f8e9;
+        border-right: 2px solid #2e7d32 !important;
+        border-bottom: 2px solid #2e7d32 !important;
+        white-space: nowrap;
+        width: 100px;
+    }
+
+    .schedule-table tbody tr td {
+        border-bottom: 1px solid #b0bec5;
+    }
+
+    .schedule-table tbody tr.day-group-end td {
+        border-bottom: 2px solid #2e7d32 !important;
+    }
+
     .calendar-placeholder {
         text-align: center;
         padding: 60px 20px;
@@ -24,10 +46,9 @@
 {% block content %}
 
 <div class="section-header">
-
     <div>
         <a href="{% url 'home' %}" class="btn btn-sm btn-outline-success mb-2">
-            <i class="bi bi-arrow-left"></i> 
+            <i class="bi bi-arrow-left"></i> Back
         </a>
         <h4 class="mb-0">Schedule</h4>
         <small class="text-muted">
@@ -35,7 +56,8 @@
         </small>
     </div>
 
-    <div class="view-toggle d-flex gap-2">
+    <div class="view-toggle d-flex gap-2 align-items-center">
+        <span class="text-muted small">Toggle views</span>
         <button class="btn btn-success btn-sm" id="tableViewBtn">
             <i class="bi bi-table"></i> Table view
         </button>
@@ -43,37 +65,36 @@
             <i class="bi bi-calendar3"></i> Calendar
         </button>
     </div>
-
 </div>
 
 <div id="tableView">
 
-    {% if enrolled_list %}
+    {% if grouped_schedules %}
 
     <div class="table-responsive schedule-table">
-        <table class="table table-hover mb-0">
+        <table class="table mb-0">
 
             <thead>
                 <tr>
-                    <th>Day</th>
-                    <th>Code</th>
-                    <th>Course Name</th>
-                    <th>Schedule</th>
-                    <th>Room</th>
+                    <th style="background:#1b5e20; color:white; width:100px;">Day</th>
+                    <th style="background:#1b5e20; color:white;">Code</th>
+                    <th style="background:#1b5e20; color:white;">Course Name</th>
+                    <th style="background:#1b5e20; color:white;">Schedule</th>
+                    <th style="background:#1b5e20; color:white;">Room</th>
                 </tr>
             </thead>
 
             <tbody>
-                {% for enrolled in enrolled_list %}
-                    {% for sched in enrolled.schedule_set.all %}
-                    <tr>
-                        <td>
-                            <span class="badge-day">
-                                {{ sched.day_of_week }}
-                            </span>
+                {% for day, schedules in grouped_schedules.items %}
+                    {% for sched in schedules %}
+                    <tr class="{% if forloop.last %}day-group-end{% endif %}">
+                        {% if forloop.first %}
+                        <td class="day-cell" rowspan="{{ schedules|length }}">
+                            {{ day|upper }}
                         </td>
-                        <td>{{ enrolled.course.course_code }}</td>
-                        <td>{{ enrolled.course.title }}</td>
+                        {% endif %}
+                        <td>{{ sched.enrolled.course.course_code }}</td>
+                        <td>{{ sched.enrolled.course.title }}</td>
                         <td>{{ sched.start_time }} – {{ sched.end_time }}</td>
                         <td>{{ sched.room|default:"—" }}</td>
                     </tr>
