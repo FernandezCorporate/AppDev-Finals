@@ -740,10 +740,19 @@ label.field-label {
   grid-template-columns: 60px repeat(7, minmax(110px, 1fr));
   grid-template-rows: 48px repeat(14, 52px);
   gap: 0;
-  background: var(--cal-bg);
+
+  background-color: var(--cal-bg);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 51px,
+    var(--cal-border) 51px,
+    var(--cal-border) 52px
+  );
+  /* This ensures the lines only start AFTER the 48px header row */
+  background-position: 0 48px; 
   
-  /* --- FIX FOR NOTE 1: HORIZONTAL SCROLLING --- */
-  min-width: 800px; /* Forces scroll bar if screen is too small */
+  min-width: 800px;
 }
 
 .grid-header {
