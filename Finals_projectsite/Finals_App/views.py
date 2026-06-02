@@ -4,14 +4,12 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from collections import defaultdict
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-
 from Finals_App.models import Semester, Enrolled, Schedule
 from Finals_App.forms import EnrolledForm, ScheduleFormSet
 
 
 # ---------------- HOME ----------------
-class HomePageView(LoginRequiredMixin, ListView):
+class HomePageView(ListView):
     model = Semester
     template_name = 'home.html'
     context_object_name = 'semesters'
@@ -23,7 +21,7 @@ class HomePageView(LoginRequiredMixin, ListView):
 
 
 # ---------------- SEMESTER DETAIL ----------------
-class SemesterDetailView(LoginRequiredMixin, DetailView):
+class SemesterDetailView(DetailView):
     model = Semester
     template_name = 'semester_detail.html'
     context_object_name = 'semester'
@@ -54,7 +52,7 @@ class SemesterDetailView(LoginRequiredMixin, DetailView):
 
 
 # ---------------- SEMESTER CRUD ----------------
-class SemesterCreateView(LoginRequiredMixin, CreateView):
+class SemesterCreateView(CreateView):
     model = Semester
     fields = ['semester_name', 'year_start', 'year_end']
     template_name = 'semester_form.html'
@@ -65,21 +63,21 @@ class SemesterCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class SemesterUpdateView(LoginRequiredMixin, UpdateView):
+class SemesterUpdateView(UpdateView):
     model = Semester
     fields = ['semester_name', 'year_start', 'year_end']
     template_name = 'semester_form.html'
     success_url = reverse_lazy('home')
 
 
-class SemesterDeleteView(LoginRequiredMixin, DeleteView):
+class SemesterDeleteView(DeleteView):
     model = Semester
     template_name = 'semester_del.html'
     success_url = reverse_lazy('home')
 
 
 # ---------------- ENROLLED CREATE ----------------
-class EnrolledCreateView(LoginRequiredMixin, CreateView):
+class EnrolledCreateView(CreateView):
     model = Enrolled
     form_class = EnrolledForm
     template_name = 'enrolled_form.html'
@@ -117,7 +115,7 @@ class EnrolledCreateView(LoginRequiredMixin, CreateView):
 
 
 # ---------------- ENROLLED UPDATE ----------------
-class EnrolledUpdateView(LoginRequiredMixin, UpdateView):
+class EnrolledUpdateView(UpdateView):
     model = Enrolled
     form_class = EnrolledForm
     template_name = 'enrolled_form.html'
@@ -152,7 +150,7 @@ class EnrolledUpdateView(LoginRequiredMixin, UpdateView):
         return redirect('semester-detail', pk=self.object.semester.pk)
 
 
-class EnrolledDeleteView(LoginRequiredMixin, DeleteView):
+class EnrolledDeleteView(DeleteView):
     model = Enrolled
     template_name = 'enrolled_del.html'
     success_url = reverse_lazy('home')
