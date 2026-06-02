@@ -1,12 +1,96 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {% if object %}Edit Semester{% else %}Add Semester{% endif %}
+{% endblock %}
+
+{% block page_title %}
+    {% if object %}Edit Semester{% else %}Add Semester{% endif %}
+{% endblock %}
+
 {% block content %}
-<h2>Add Semester</h2>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
 
-    <button type="submit">Save</button>
-</form>
-{% endblock %} 
+        <div class="card card-custom">
+            <div class="card-body p-4">
+
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-1">
+                        {% if object %}
+                            Edit Semester
+                        {% else %}
+                            New Semester
+                        {% endif %}
+                    </h5>
+                    <small class="text-muted">
+                        {% if object %}
+                            Update the details of this semester.
+                        {% else %}
+                            Fill in the details to create a new semester.
+                        {% endif %}
+                    </small>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Semester Name</label>
+                        <input type="text"
+                               name="semester_name"
+                               class="form-control"
+                               placeholder="e.g. 1st Semester"
+                               value="{{ form.semester_name.value|default:'' }}"
+                               required>
+                        {% if form.semester_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.semester_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Year Start</label>
+                            <input type="number"
+                                   name="year_start"
+                                   class="form-control"
+                                   placeholder="e.g. 2024"
+                                   value="{{ form.year_start.value|default:'' }}"
+                                   required>
+                            {% if form.year_start.errors %}
+                                <div class="text-danger small mt-1">{{ form.year_start.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Year End</label>
+                            <input type="number"
+                                   name="year_end"
+                                   class="form-control"
+                                   placeholder="e.g. 2025"
+                                   value="{{ form.year_end.value|default:'' }}"
+                                   required>
+                            {% if form.year_end.errors %}
+                                <div class="text-danger small mt-1">{{ form.year_end.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-green px-4">
+                            {% if object %}Save Changes{% else %}Create Semester{% endif %}
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

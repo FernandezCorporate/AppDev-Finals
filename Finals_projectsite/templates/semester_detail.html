@@ -1,9 +1,130 @@
 {% extends 'base.html' %}
 
+{% block title %}
+{{ semester.semester_name }} {{ semester.year_start }}-{{ semester.year_end }}
+{% endblock %}
+
+{% block page_title %}
+{{ semester.semester_name }} {{ semester.year_start }}-{{ semester.year_end }}
+{% endblock %}
+
+{% block css %}
+<style>
+    .calendar-placeholder {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.05);
+        color: #888;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h1>{{ semester.name }}</h1>
 
-<p>School Year: {{ semester.school_year }}</p>
+<div class="section-header">
 
-<a href="{% url 'home' %}">Back</a>
+    <div>
+        <a href="{% url 'home' %}" class="btn btn-sm btn-outline-success mb-2">
+            <i class="bi bi-arrow-left"></i> 
+        </a>
+        <h4 class="mb-0">Schedule</h4>
+        <small class="text-muted">
+            {{ semester.semester_name }} {{ semester.year_start }}–{{ semester.year_end }}
+        </small>
+    </div>
+
+    <div class="view-toggle d-flex gap-2">
+        <button class="btn btn-success btn-sm" id="tableViewBtn">
+            <i class="bi bi-table"></i> Table view
+        </button>
+        <button class="btn btn-outline-success btn-sm" id="calendarViewBtn">
+            <i class="bi bi-calendar3"></i> Calendar
+        </button>
+    </div>
+
+</div>
+
+<div id="tableView">
+
+    {% if enrolled_list %}
+
+    <div class="table-responsive schedule-table">
+        <table class="table table-hover mb-0">
+
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Code</th>
+                    <th>Course Name</th>
+                    <th>Schedule</th>
+                    <th>Room</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for enrolled in enrolled_list %}
+                    {% for sched in enrolled.schedule_set.all %}
+                    <tr>
+                        <td>
+                            <span class="badge-day">
+                                {{ sched.day_of_week }}
+                            </span>
+                        </td>
+                        <td>{{ enrolled.course.course_code }}</td>
+                        <td>{{ enrolled.course.title }}</td>
+                        <td>{{ sched.start_time }} – {{ sched.end_time }}</td>
+                        <td>{{ sched.room|default:"—" }}</td>
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+        <i class="bi bi-calendar-x" style="font-size:2.5rem; color:#ccc;"></i>
+        <h5 class="mt-3">No schedules yet</h5>
+        <p class="text-muted">No courses enrolled for this semester.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+<div id="calendarView" style="display:none;">
+    <div class="calendar-placeholder">
+        <i class="bi bi-calendar3" style="font-size:2.5rem; color:#ccc;"></i>
+        <h5 class="mt-3">Calendar view</h5>
+        <p>Coming soon.</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const tableBtn = document.getElementById('tableViewBtn');
+    const calBtn = document.getElementById('calendarViewBtn');
+    const tableView = document.getElementById('tableView');
+    const calView = document.getElementById('calendarView');
+
+    tableBtn.addEventListener('click', function () {
+        tableView.style.display = 'block';
+        calView.style.display = 'none';
+        tableBtn.classList.replace('btn-outline-success', 'btn-success');
+        calBtn.classList.replace('btn-success', 'btn-outline-success');
+    });
+
+    calBtn.addEventListener('click', function () {
+        calView.style.display = 'block';
+        tableView.style.display = 'none';
+        calBtn.classList.replace('btn-outline-success', 'btn-success');
+        tableBtn.classList.replace('btn-success', 'btn-outline-success');
+    });
+</script>
 {% endblock %}

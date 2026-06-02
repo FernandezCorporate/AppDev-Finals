@@ -231,3 +231,14 @@ body {
     justify-content: center;
     border-radius: 8px;
 }
+
+.card-custom {
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+.form-control:focus {
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 0.2rem rgba(46,125,50,.15);
+}
