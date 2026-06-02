@@ -8,134 +8,7 @@
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-
-        :root{
-            --dark-green:#0f2a14;
-            --primary-green:#2e7d32;
-            --light-green:#e8f5e9;
-            --border:#dce3dc;
-            --background:#f5f7f5;
-        }
-
-        body{
-            margin:0;
-            padding:0;
-            background:var(--background);
-            font-family:'Segoe UI',sans-serif;
-        }
-
-        /* SIDEBAR */
-
-        .sidebar{
-            width:260px;
-            height:100vh;
-            position:fixed;
-            left:0;
-            top:0;
-            background:var(--dark-green);
-            overflow-y:auto;
-        }
-
-        .logo-container{
-            text-align:center;
-            padding:25px 15px;
-            border-bottom:1px solid rgba(255,255,255,.1);
-        }
-
-        .logo-container img{
-            width:110px;
-            height:110px;
-            object-fit:cover;
-            border-radius:50%;
-            background:white;
-            padding:5px;
-        }
-
-        .logo-container h5{
-            color:white;
-            margin-top:12px;
-            margin-bottom:3px;
-            font-weight:700;
-        }
-
-        .logo-container small{
-            color:#9ad39f;
-        }
-
-        .sidebar-menu{
-            padding:15px 10px;
-        }
-
-        .sidebar-menu a{
-            display:block;
-            text-decoration:none;
-            color:#d7ecd8;
-            padding:12px 15px;
-            border-radius:10px;
-            margin-bottom:8px;
-            transition:.3s;
-        }
-
-        .sidebar-menu a:hover{
-            background:var(--primary-green);
-            color:white;
-        }
-
-        /* MAIN */
-
-        .main-content{
-            margin-left:260px;
-            padding:25px;
-        }
-
-        .topbar{
-            background:white;
-            border-radius:15px;
-            padding:18px 25px;
-            margin-bottom:25px;
-            box-shadow:0 2px 12px rgba(0,0,0,.05);
-        }
-
-        .page-title{
-            margin:0;
-            font-weight:700;
-            color:#1e1e1e;
-        }
-
-        .welcome{
-            color:#666;
-        }
-
-        .btn-green{
-            background:var(--primary-green);
-            color:white;
-            border:none;
-        }
-
-        .menu-icon {
-             margin-right: 10px;
-        }
-
-        .btn-green:hover{
-            background:#256629;
-            color:white;
-        }
-
-        @media(max-width:768px){
-
-            .sidebar{
-                position:relative;
-                width:100%;
-                height:auto;
-            }
-
-            .main-content{
-                margin-left:0;
-            }
-        }
-
-    </style>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
     {% block css %}{% endblock %}
 </head>
@@ -144,12 +17,9 @@
     <div class="sidebar">
 
         <div class="logo-container">
-
             <img src="{% static 'images/site_logo.jpg' %}" alt="SITE Logo">
-
             <h5>SITE Scheduler</h5>
             <small>Palawan State University</small>
-
         </div>
 
         <div class="sidebar-menu">
@@ -157,21 +27,18 @@
                 <i class="bi bi-mortarboard-fill menu-icon"></i>
                 Semesters
             </a>
-
             <a href="{% url 'semester-create' %}">
                 <i class="bi bi-folder-plus menu-icon"></i>
                 Add Semester
             </a>
-
             <a href="#">
                 <i class="bi bi-calculator menu-icon"></i>
                 Grade Calculator
             </a>
-
             <a href="#">
                 <i class="bi bi-box-arrow-right menu-icon"></i>
                 Logout
-            </a> 
+            </a>
         </div>
 
     </div>
@@ -179,35 +46,24 @@
     <div class="main-content">
 
         <div class="topbar">
-
             <div class="d-flex justify-content-between align-items-center">
-
                 <div>
                     <h3 class="page-title">
-                        {% block page_title %}
-                        SITE Scheduler
-                        {% endblock %}
+                        {% block page_title %}SITE Scheduler{% endblock %}
                     </h3>
                 </div>
-
                 <div class="welcome">
-                    Welcome,
-                    <strong>{{ request.user.username }}</strong>
+                    Welcome, <strong>{{ request.user.username }}</strong>
                 </div>
-
             </div>
-
         </div>
 
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
 
     </div>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
-    {% block scripts %}
-    {% endblock %}
+    {% block scripts %}{% endblock %}
 
 </body>
 </html>

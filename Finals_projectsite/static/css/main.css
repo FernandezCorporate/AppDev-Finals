@@ -1,0 +1,233 @@
+.card-custom {
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+.badge-green {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 30px;
+    padding: 5px 12px;
+    font-size: .8rem;
+    display: inline-block;
+}
+
+.badge-day {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: .78rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Tables */
+.schedule-table {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+.schedule-table thead {
+    background: #1b5e20;
+    color: white;
+}
+
+.schedule-table thead th {
+    font-weight: 500;
+    padding: 14px 16px;
+    border: none;
+}
+
+.schedule-table tbody td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    border-color: #f0f4f0;
+}
+
+.schedule-table tbody tr:hover {
+    background: #f1f8e9;
+}
+
+.view-toggle .btn {
+    border-radius: 8px;
+    font-size: .85rem;
+    padding: 6px 16px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+:root {
+    --dark-green: #0f2a14;
+    --primary-green: #2e7d32;
+    --light-green: #e8f5e9;
+    --border: #dce3dc;
+    --background: #f5f7f5;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--background);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--dark-green);
+    overflow-y: auto;
+}
+
+.logo-container {
+    text-align: center;
+    padding: 25px 15px;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+}
+
+.logo-container img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: white;
+    padding: 5px;
+}
+
+.logo-container h5 {
+    color: white;
+    margin-top: 12px;
+    margin-bottom: 3px;
+    font-weight: 700;
+}
+
+.logo-container small {
+    color: #9ad39f;
+}
+
+.sidebar-menu {
+    padding: 15px 10px;
+}
+
+.sidebar-menu a {
+    display: block;
+    text-decoration: none;
+    color: #d7ecd8;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    transition: .3s;
+}
+
+.sidebar-menu a:hover {
+    background: var(--primary-green);
+    color: white;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 25px;
+}
+
+.topbar {
+    background: white;
+    border-radius: 15px;
+    padding: 18px 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.05);
+}
+
+.page-title {
+    margin: 0;
+    font-weight: 700;
+    color: #1e1e1e;
+}
+
+.welcome {
+    color: #666;
+}
+
+.btn-green {
+    background: var(--primary-green);
+    color: white;
+    border: none;
+}
+
+.btn-green:hover {
+    background: #256629;
+    color: white;
+}
+
+.menu-icon {
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+.semester-card {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: .3s;
+    box-shadow: 0 3px 12px rgba(0,0,0,.05);
+    height: 100%;
+}
+
+.semester-card:hover {
+    transform: translateY(-4px);
+}
+
+.semester-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.semester-year {
+    color: #666;
+}
+
+.course-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 30px;
+    padding: 5px 12px;
+    font-size: .8rem;
+    display: inline-block;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
