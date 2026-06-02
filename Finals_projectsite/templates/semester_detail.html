@@ -11,126 +11,143 @@
 {% block content %}
 
 <div class="detail-header">
+
     <div>
         <a href="{% url 'home' %}" class="btn btn-sm btn-outline-success mb-2">
-            <i class="bi bi-arrow-left"></i> 
+            <i class="bi bi-arrow-left"></i>
         </a>
-        <h4 class="mb-0">Schedule</h4>
+
+        <h4 class="mb-0">Semester Schedule</h4>
+
         <small class="text-muted">
             {{ semester.semester_name }} {{ semester.year_start }}–{{ semester.year_end }}
         </small>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
-        <button class="btn-toggle active" id="tableViewBtn">
-            <i class="bi bi-table"></i> Table
-        </button>
-        <button class="btn-toggle" id="calendarViewBtn">
-            <i class="bi bi-calendar3"></i> Calendar
-        </button>
-    </div>
 </div>
 
-<div id="tableView">
+<!-- ADD COURSE BUTTON (FIXED) -->
+<div class="table-toolbar mb-3">
+    <a href="{% url 'enrolled-create' semester.pk %}" class="btn-add-course">
+        <i class="bi bi-plus-lg"></i> Add Course
+    </a>
+</div>
 
-    <div class="table-toolbar">
-        <a href="{% url 'enrolled-create' %}" class="btn-add-course">
-            <i class="bi bi-plus-lg"></i> Add Course
-        </a>
-    </div>
+{% if grouped_schedules %}
 
-    {% if grouped_schedules %}
+<div class="schedule-wrap">
 
-    <div class="schedule-wrap">
-        <table class="sched-table">
-            <thead>
-                <tr>
-                    <th>Day</th>
-                    <th>Code</th>
-                    <th>Course Name</th>
-                    <th>Schedule</th>
-                    <th>Room</th>
-                    <th>Actions</th>
+    <table class="sched-table">
+
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>Code</th>
+                <th>Course</th>
+                <th>Time</th>
+                <th>Room</th>
+                <th>Enrolled</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for day, schedules in grouped_schedules.items %}
+
+                {% for sched in schedules %}
+
+                <tr class="{% if forloop.last %}day-group-end{% endif %}">
+
+                    {% if forloop.first %}
+                    <td rowspan="{{ schedules|length }}" class="day-cell">
+                        {{ day|upper }}
+                    </td>
+                    {% endif %}
+
+                    <td>
+                        <span class="code-badge">
+                            {{ sched.enrolled.course.course_code }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ sched.enrolled.course.title }}
+                    </td>
+
+                    <td class="time-text">
+                        {{ sched.start_time }} – {{ sched.end_time }}
+                    </td>
+
+                    <td class="room-text">
+                        {{ sched.room|default:"—" }}
+                    </td>
+
+                    <!-- UPDATED ACTIONS -->
+                    <td>
+                        <a href="{% url 'enrolled-update' sched.enrolled.pk %}"
+                           class="btn-act btn-act-edit">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                    </td>
+
                 </tr>
-            </thead>
-            <tbody>
-                {% for day, schedules in grouped_schedules.items %}
-                    {% for sched in schedules %}
-                    <tr class="{% if forloop.last %}day-group-end{% endif %}">
-                        {% if forloop.first %}
-                        <td class="day-cell" rowspan="{{ schedules|length }}">
-                            {{ day|upper }}
-                        </td>
-                        {% endif %}
-                        <td><span class="code-badge">{{ sched.enrolled.course.course_code }}</span></td>
-                        <td>{{ sched.enrolled.course.title }}</td>
-                        <td class="time-text">{{ sched.start_time }} – {{ sched.end_time }}</td>
-                        <td class="room-text">{{ sched.room|default:"—" }}</td>
-                        <td>
-                            <div class="action-btns">
-                                <a href="{% url 'schedule-update' sched.pk %}"
-                                   class="btn-act btn-act-edit"
-                                   title="Edit">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>
-                                <a href="{% url 'schedule-delete' sched.pk %}"
-                                   class="btn-act btn-act-del"
-                                   title="Delete">
-                                    <i class="bi bi-trash-fill"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
+
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
 
-    {% else %}
+            {% endfor %}
 
-    <div class="empty-state">
-        <i class="bi bi-calendar-x" style="font-size:2.5rem; color:#ccc;"></i>
-        <h5 class="mt-3">No schedules yet</h5>
-        <p class="text-muted">No courses enrolled for this semester.</p>
-        <a href="{% url 'enrolled-create' %}" class="btn-add-course mt-2">
-            <i class="bi bi-plus-lg"></i> Add Course
-        </a>
-    </div>
+        </tbody>
 
-    {% endif %}
+    </table>
 
 </div>
 
-<div id="calendarView" style="display:none;">
-    <div class="calendar-placeholder">
-        <i class="bi bi-calendar3" style="font-size:2.5rem; color:#ccc;"></i>
-        <h5 class="mt-3">Calendar view</h5>
-        <p>Coming soon.</p>
-    </div>
+{% else %}
+
+<div class="empty-state">
+
+    <i class="bi bi-calendar-x" style="font-size:2.5rem; color:#ccc;"></i>
+
+    <h5 class="mt-3">No schedules yet</h5>
+
+    <p class="text-muted">
+        Start by adding a course to this semester.
+    </p>
+
+    <a href="{% url 'enrolled-create' semester.pk %}" class="btn-add-course mt-2">
+        <i class="bi bi-plus-lg"></i> Add Course
+    </a>
+
 </div>
+
+{% endif %}
 
 {% endblock %}
 
 {% block scripts %}
 <script>
-    const tableBtn = document.getElementById('tableViewBtn');
-    const calBtn = document.getElementById('calendarViewBtn');
-    const tableView = document.getElementById('tableView');
-    const calView = document.getElementById('calendarView');
 
-    tableBtn.addEventListener('click', function () {
-        tableView.style.display = 'block';
-        calView.style.display = 'none';
-        tableBtn.classList.add('active');
-        calBtn.classList.remove('active');
-    });
+const tableBtn = document.getElementById('tableViewBtn');
+const calBtn = document.getElementById('calendarViewBtn');
 
-    calBtn.addEventListener('click', function () {
-        calView.style.display = 'block';
-        tableView.style.display = 'none';
-        calBtn.classList.add('active');
-        tableBtn.classList.remove('active');
-    });
+const tableView = document.getElementById('tableView');
+const calView = document.getElementById('calendarView');
+
+tableBtn.addEventListener('click', function () {
+    tableView.style.display = 'block';
+    calView.style.display = 'none';
+
+    tableBtn.classList.add('active');
+    calBtn.classList.remove('active');
+});
+
+calBtn.addEventListener('click', function () {
+    calView.style.display = 'block';
+    tableView.style.display = 'none';
+
+    calBtn.classList.add('active');
+    tableBtn.classList.remove('active');
+});
+
 </script>
 {% endblock %}

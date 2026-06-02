@@ -1,102 +1,204 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {% if object %}Edit Enrolled Course{% else %}Add Enrolled Course{% endif %}
+{% if object %}Edit Enrolled Course{% else %}Add Enrolled Course{% endif %}
 {% endblock %}
 
 {% block page_title %}
-    {% if object %}Edit Enrolled Course{% else %}Add Enrolled Course{% endif %}
+{% if object %}Edit Enrolled Course{% else %}Add Enrolled Course{% endif %}
 {% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-center">
-    <div class="col-lg-6 col-md-8">
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
 
-        <div class="card card-custom">
-            <div class="card-body p-4">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
 
-                <div class="mb-4">
-                    <h5 class="fw-bold mb-1">
+                    <h4 class="mb-1 fw-bold">
                         {% if object %}Edit Enrolled Course{% else %}Add Enrolled Course{% endif %}
-                    </h5>
-                    <small class="text-muted">
-                        {% if object %}Update course enrollment details.{% else %}Add a course to this semester.{% endif %}
-                    </small>
-                </div>
+                    </h4>
+                    <p class="text-muted mb-4">Fill in the details below.</p>
 
-                <form method="post">
-                    {% csrf_token %}
+                    <form method="post">
+                        {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Course</label>
-                        <select name="course" class="form-select" required>
-                            <option value="">-- Select Course --</option>
-                            {% for course in form.course.field.queryset %}
-                            <option value="{{ course.pk }}"
-                                {% if form.course.value|stringformat:"s" == course.pk|stringformat:"s" %}selected{% endif %}>
-                                {{ course }}
-                            </option>
+                        <!-- COURSE -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Course</label>
+                            {{ form.course }}
+                        </div>
+
+                        <!-- TEACHER -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Teacher First Name</label>
+                                {{ form.teacher_fname }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Teacher Last Name</label>
+                                {{ form.teacher_lname }}
+                            </div>
+                        </div>
+
+                        <!-- GRADE -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Final Grade</label>
+                            {{ form.final_grade }}
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- SCHEDULE HEADER -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-0 fw-bold">Schedules</h5>
+                                <p class="text-muted small mb-0">Add one or more class schedules.</p>
+                            </div>
+                            <button type="button"
+                                    id="add-schedule"
+                                    class="btn btn-outline-success btn-sm rounded-3 px-3">
+                                + Add Schedule
+                            </button>
+                        </div>
+
+                        {{ schedule_formset.management_form }}
+
+                        <!-- SCHEDULE LIST -->
+                        <div id="schedule-container">
+                            {% for sform in schedule_formset %}
+                            <div class="card border-0 rounded-3 bg-light mb-3 schedule-item">
+                                <div class="card-body p-3">
+
+                                    {{ sform.id }}
+                                    {{ sform.DELETE }}
+
+                                    <div class="row g-3 align-items-end">
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold small mb-1">Day</label>
+                                            {{ sform.day_of_week }}
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold small mb-1">Start Time</label>
+                                            {{ sform.start_time }}
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold small mb-1">End Time</label>
+                                            {{ sform.end_time }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label fw-semibold small mb-1">Room</label>
+                                            {{ sform.room }}
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button"
+                                                    class="btn btn-outline-danger btn-sm rounded-3 w-100 remove-schedule"
+                                                    title="Remove">
+                                                &times;
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
                             {% endfor %}
-                        </select>
-                        {% if form.course.errors %}
-                            <div class="text-danger small mt-1">{{ form.course.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Teacher First Name</label>
-                            <input type="text"
-                                   name="teacher_fname"
-                                   class="form-control"
-                                   placeholder="e.g. Maria"
-                                   value="{{ form.teacher_fname.value|default:'' }}">
-                            {% if form.teacher_fname.errors %}
-                                <div class="text-danger small mt-1">{{ form.teacher_fname.errors }}</div>
-                            {% endif %}
                         </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Teacher Last Name</label>
-                            <input type="text"
-                                   name="teacher_lname"
-                                   class="form-control"
-                                   placeholder="e.g. Santos"
-                                   value="{{ form.teacher_lname.value|default:'' }}">
-                            {% if form.teacher_lname.errors %}
-                                <div class="text-danger small mt-1">{{ form.teacher_lname.errors }}</div>
-                            {% endif %}
+
+                        <!-- EMPTY FORM TEMPLATE -->
+                        <template id="empty-form-template">
+                            <div class="card border-0 rounded-3 bg-light mb-3 schedule-item">
+                                <div class="card-body p-3">
+
+                                    {{ schedule_formset.empty_form.id }}
+                                    {{ schedule_formset.empty_form.DELETE }}
+
+                                    <div class="row g-3 align-items-end">
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold small mb-1">Day</label>
+                                            {{ schedule_formset.empty_form.day_of_week }}
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold small mb-1">Start Time</label>
+                                            {{ schedule_formset.empty_form.start_time }}
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label fw-semibold small mb-1">End Time</label>
+                                            {{ schedule_formset.empty_form.end_time }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label fw-semibold small mb-1">Room</label>
+                                            {{ schedule_formset.empty_form.room }}
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button"
+                                                    class="btn btn-outline-danger btn-sm rounded-3 w-100 remove-schedule"
+                                                    title="Remove">
+                                                &times;
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </template>
+
+                        <hr class="my-4">
+
+                        <!-- ACTIONS -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success px-4 rounded-3">
+                                {% if object %}Save Changes{% else %}Create{% endif %}
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4 rounded-3">
+                                Cancel
+                            </a>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Final Grade <span class="text-muted fw-normal">(optional)</span></label>
-                        <input type="number"
-                               name="final_grade"
-                               class="form-control"
-                               placeholder="e.g. 1.25"
-                               step="0.01"
-                               value="{{ form.final_grade.value|default:'' }}">
-                        {% if form.final_grade.errors %}
-                            <div class="text-danger small mt-1">{{ form.final_grade.errors }}</div>
-                        {% endif %}
-                    </div>
+                    </form>
 
-                    <div class="d-flex gap-2 mt-4">
-                        <button type="submit" class="btn btn-green px-4">
-                            {% if object %}Save Changes{% else %}Add Course{% endif %}
-                        </button>
-                        <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4">
-                            Cancel
-                        </a>
-                    </div>
-
-                </form>
-
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const container = document.getElementById("schedule-container");
+    const addBtn    = document.getElementById("add-schedule");
+    const totalForms = document.getElementById("id_schedule_set-TOTAL_FORMS");
+
+    // ADD ROW
+    addBtn.addEventListener("click", function () {
+        let formCount = parseInt(totalForms.value);
+        let template  = document.getElementById("empty-form-template").innerHTML;
+        template = template.replace(/__prefix__/g, formCount);
+        container.insertAdjacentHTML("beforeend", template);
+        totalForms.value = formCount + 1;
+    });
+
+    // REMOVE ROW
+    container.addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-schedule")) {
+            const row         = e.target.closest(".schedule-item");
+            const deleteInput = row.querySelector("input[type='checkbox']");
+            if (deleteInput) {
+                deleteInput.checked = true;
+                row.style.display   = "none";
+            } else {
+                row.remove();
+                totalForms.value = parseInt(totalForms.value) - 1;
+            }
+        }
+    });
+
+});
+</script>
 {% endblock %}
