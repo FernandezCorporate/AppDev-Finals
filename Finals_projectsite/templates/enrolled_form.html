@@ -12,7 +12,6 @@
         <div class="card card-custom">
             <div class="card-body p-4">
 
-                <!-- HEADER -->
                 <div class="mb-4">
                     <h5 class="fw-bold mb-1">
                         {% if object %}Edit Enrolled Course{% else %}Add Enrolled Course{% endif %}
@@ -23,7 +22,6 @@
                 <form method="post">
                     {% csrf_token %}
 
-                    <!-- COURSE -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Course</label>
                         {{ form.course }}
@@ -32,7 +30,6 @@
                         {% endif %}
                     </div>
 
-                    <!-- TEACHER -->
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Teacher First Name</label>
@@ -50,7 +47,6 @@
                         </div>
                     </div>
 
-                    <!-- FINAL GRADE -->
                     <div class="mb-4" style="max-width: 200px;">
                         <label class="form-label fw-semibold">Final Grade</label>
                         {{ form.final_grade }}
@@ -61,7 +57,6 @@
 
                     <hr class="my-4">
 
-                    <!-- SCHEDULES HEADER -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
                             <h6 class="fw-bold mb-0">Schedules</h6>
@@ -74,7 +69,6 @@
 
                     {{ schedule_formset.management_form }}
 
-                    <!-- SCHEDULE ROWS -->
                     <div id="schedule-container">
                         {% for sform in schedule_formset %}
                         <div class="schedule-item border rounded-3 bg-light p-3 mb-3">
@@ -110,7 +104,6 @@
                         {% endfor %}
                     </div>
 
-                    <!-- EMPTY FORM TEMPLATE -->
                     <template id="empty-form-template">
                         <div class="schedule-item border rounded-3 bg-light p-3 mb-3">
 
@@ -149,7 +142,6 @@
 
                     <hr class="my-4">
 
-                    <!-- ACTIONS -->
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-green px-4">
                             {% if object %}Save Changes{% else %}Create{% endif %}
@@ -169,7 +161,6 @@
 
 {% endblock %}
 
-
 {% block scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -177,7 +168,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const addBtn     = document.getElementById("add-schedule");
     const totalForms = document.getElementById("id_schedule_set-TOTAL_FORMS");
 
-    // ADD — clone empty template, replace __prefix__ with current count
     addBtn.addEventListener("click", function () {
         let count    = parseInt(totalForms.value);
         let template = document.getElementById("empty-form-template").innerHTML;
@@ -186,7 +176,6 @@ document.addEventListener("DOMContentLoaded", function () {
         totalForms.value = count + 1;
     });
 
-    // REMOVE — mark DELETE checkbox for existing rows, remove node for new ones
     container.addEventListener("click", function (e) {
         const btn = e.target.closest(".remove-schedule");
         if (!btn) return;
