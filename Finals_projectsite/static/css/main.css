@@ -706,3 +706,133 @@ label.field-label {
 .schedule-item input[type="time"] {
     background-color: #fff;
 }
+
+
+
+/* -------------------------------------------
+  MODERN CALENDAR GRID STYLES
+------------------------------------------- */
+
+/* Replace your calendar color variables */
+:root {
+  --cal-bg: #fafbfc;
+  --cal-border: #e8ecf0;
+  --cal-header-bg: #f8f9fa;
+  --cal-accent: #22c55e;
+  --cal-accent-soft: #dcfce7;
+  --cal-text: #1f2937;
+  --cal-text-muted: #6b7280;
+}
+
+.calendar-wrapper {
+  background: var(--cal-bg);
+  border: 1px solid var(--cal-border);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  
+  /* --- FIX FOR NOTE 1: SCROLLABLE WRAPPER --- */
+  max-height: 90vh; /* Limits height so it scrolls internally */
+  overflow: auto;   /* Changed from hidden to auto */
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: 60px repeat(7, minmax(110px, 1fr));
+  grid-template-rows: 48px repeat(14, 52px);
+  gap: 0;
+  background: var(--cal-bg);
+  
+  /* --- FIX FOR NOTE 1: HORIZONTAL SCROLLING --- */
+  min-width: 800px; /* Forces scroll bar if screen is too small */
+}
+
+.grid-header {
+  background: var(--cal-header-bg);
+  color: var(--cal-text);
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid var(--cal-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* --- FIX FOR NOTE 1: STICKY TOP HEADER --- */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Subtle vertical dividers */
+.grid-header:not(:last-child) {
+  border-right: 1px solid var(--cal-border);
+}
+
+.time-label {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--cal-text-muted);
+  background: var(--cal-header-bg);
+  border-right: 1px solid var(--cal-border);
+  padding: 0 8px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-top: 4px;
+  
+  /* --- FIX FOR NOTE 1: STICKY LEFT COLUMN --- */
+  position: sticky;
+  left: 0;
+  z-index: 5;
+}
+
+
+.course-cell {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: none;
+  border-left: 3px solid var(--cal-accent);
+  border-radius: 8px;
+  margin: 3px 6px;
+  padding: 8px 10px;
+  font-size: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  transition: all 0.15s ease;
+  
+  /* Keeps content inside cell clean */
+  overflow: hidden; 
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.course-cell:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  z-index: 2; /* Brings hovered course above others */
+}
+
+.course-title {
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #166534;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.course-time {
+  font-size: 0.68rem;
+  color: #4b5563;
+  font-weight: 400;
+}
+
+.course-room {
+  font-size: 0.65rem;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+/* Add subtle horizontal lines between hours */
+.calendar-grid > *:not(.grid-header):not(.time-label):not(.course-cell) {
+  border-bottom: 1px solid #f1f5f9;
+}

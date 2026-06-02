@@ -59,7 +59,6 @@ class Schedule(BaseModel):
         ('Sunday', 'Sunday'),
     ], default='Monday')
     room = models.CharField(max_length=255, blank=True, null=True)
-
     enrolled = models.ForeignKey(Enrolled, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
@@ -67,3 +66,24 @@ class Schedule(BaseModel):
 
     def __str__(self):
         return f"{self.enrolled.course.course_code} on {self.day_of_week} from {self.start_time} to {self.end_time} in {self.room}"
+    @property
+    def get_grid_column(self):
+        days = {
+            'Sunday': 2, 'Monday': 3, 'Tuesday': 4,
+            'Wednesday': 5, 'Thursday': 6, 'Friday': 7, 'Saturday': 8
+        }
+        return days.get(self.day_of_week, 3)
+
+    @property
+    def get_start_row(self):
+        base_hour = 7
+        row = (self.start_time.hour - base_hour) + 2
+        return int(row)
+
+    @property
+    def get_end_row(self):
+        base_hour = 7
+        row = (self.end_time.hour - base_hour) + 2
+        if self.end_time.minute > 0:
+            row += 1
+        return int(row)
