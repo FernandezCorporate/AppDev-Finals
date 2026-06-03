@@ -4,75 +4,80 @@
 {% block page_title %}Grade Calculator{% endblock %}
 
 {% block content %}
-
-<div class="form-card">
-
-    <form method="GET">
-        <label class="field-label">Select Semester</label>
-
-        <select name="semester" class="form-control" onchange="this.form.submit()">
-            <option value="">-- Select Semester --</option>
-
-            {% for sem in semesters %}
-                <option value="{{ sem.id }}"
-                    {% if selected_semester_id == sem.id|stringformat:"s" %}
-                        selected
-                    {% endif %}
-                >
-                    {{ sem.semester_name }} {{ sem.year_start }}-{{ sem.year_end }}
-                </option>
-            {% endfor %}
-        </select>
-    </form>
-
-</div>
-
-{% if enrolled_list %}
-
-<form method="POST" class="form-card mt-3">
-    {% csrf_token %}
-
-    <input type="hidden" name="semester" value="{{ selected_semester_id }}">
-    <h5 class="mb-3">Enter Grades</h5>
+<div class="calculator-container">
     
-    <div class="table-responsive">
-        <table class="table grade-table">
-            <thead>
-                <tr>
-                    <th>Course</th>
-                    <th width="180">Grade</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for e in enrolled_list %}
-                    {% if "NSTP" not in e.course.course_code|upper %}
-                    <tr>
-                        <td>
-                            <div class="fw-semibold">{{ e.course.course_code }}</div>
-                            <small class="text-muted">{{ e.course.title }}</small>
-                        </td>
-                        <td>
-                            <input type="number" name="grade_{{ e.id }}" class="form-control grade-input" min="1.0"
-                                max="5.0" step="0.25" value="{{ e.final_grade|default_if_none:'' }}" required>
-                        </td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="calc-header">
+        <i class="bi bi-calculator-fill"></i>
+        <h2>GWA Calculator</h2>
+        <p>Select a semester to compute your General Weighted Average.</p>
     </div>
 
-    <button type="submit" class="btn-add-course mt-3">Compute GWA</button>
-</form>
+    <div class="calc-card shadow-sm mb-4">
+        <form method="GET">
+            <label class="form-label fw-bold text-success mb-2">Select Semester</label>
+            <select name="semester" class="form-select custom-select" onchange="this.form.submit()">
+                <option value="">-- Choose Semester --</option>
+                {% for sem in semesters %}
+                    <option value="{{ sem.id }}"
+                        {% if selected_semester_id == sem.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ sem.semester_name }} {{ sem.year_start }}-{{ sem.year_end }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
 
-{% endif %}
+    {% if enrolled_list %}
+    <form method="POST" class="calc-card shadow-sm">
+        {% csrf_token %}
+        <input type="hidden" name="semester" value="{{ selected_semester_id }}">
+        
+        <h5 class="mb-3 fw-bold text-dark">Enter Your Grades</h5>
+        
+        <div class="table-responsive grade-table-wrap">
+            <table class="table grade-table align-middle">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th width="150" class="text-center">Final Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in enrolled_list %}
+                        {% if "NSTP" not in e.course.course_code|upper %}
+                        <tr>
+                            <td>
+                                <div class="course-code-badge">{{ e.course.course_code }}</div>
+                                <div class="course-title-text mt-1">{{ e.course.title }}</div>
+                            </td>
+                            <td>
+                                <input type="number" name="grade_{{ e.id }}" 
+                                    class="form-control text-center grade-input fw-bold" 
+                                    min="1.0" max="5.0" step="0.25" 
+                                    value="{{ e.final_grade|default_if_none:'' }}" required>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-{% if gwa is not None %}
-<div class="schedule-wrap mt-4 p-3">
-    <h5>Computed GWA</h5>
-    <h2 class="text-success">{{ gwa }}</h2>
+        <button type="submit" class="btn btn-calc w-100 mt-4">
+            <i class="bi bi-bar-chart-fill me-2"></i> Compute GWA
+        </button>
+    </form>
+    {% endif %}
+
+    {% if gwa is not None %}
+    <div class="calc-result-card shadow-sm mt-4 text-center bounce-in">
+        <h5 class="text-muted mb-1">Your Computed GWA</h5>
+        <h1 class="display-4 fw-bold text-success mb-0">{{ gwa }}</h1>
+    </div>
+    {% endif %}
+
 </div>
-{% endif %}
-
 {% endblock %}
