@@ -840,3 +840,32 @@ label.field-label {
     font-size:.65rem;
     color:#6b7280;
 }
+
+.grade-table {
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e4ebe4;
+}
+
+.grade-table thead {
+    background: #f1f8e9;
+}
+
+.grade-table th {
+    padding: 12px;
+    font-size: 13px;
+    color: #2e7d32;
+    text-align: left;
+}
+
+.grade-table td {
+    padding: 12px;
+    border-top: 1px solid #f0f4f0;
+    vertical-align: middle;
+}
+
+.grade-input {
+    max-width: 120px;
+}

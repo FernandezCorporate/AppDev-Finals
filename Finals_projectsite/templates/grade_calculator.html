@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Grade Calculator{% endblock %}
+{% block page_title %}Grade Calculator{% endblock %}
+
+{% block content %}
+
+<div class="form-card">
+
+    <form method="GET">
+        <label class="field-label">Select Semester</label>
+
+        <select name="semester" class="form-control" onchange="this.form.submit()">
+            <option value="">-- Select Semester --</option>
+
+            {% for sem in semesters %}
+                <option value="{{ sem.id }}"
+                    {% if selected_semester_id == sem.id|stringformat:"s" %}
+                        selected
+                    {% endif %}
+                >
+                    {{ sem.semester_name }} {{ sem.year_start }}-{{ sem.year_end }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+</div>
+
+{% if enrolled_list %}
+
+<form method="POST" class="form-card mt-3">
+    {% csrf_token %}
+
+    <input type="hidden" name="semester" value="{{ selected_semester_id }}">
+    <h5 class="mb-3">Enter Grades</h5>
+    
+    <div class="table-responsive">
+        <table class="table grade-table">
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th width="180">Grade</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for e in enrolled_list %}
+                    {% if "NSTP" not in e.course.course_code|upper %}
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">{{ e.course.course_code }}</div>
+                            <small class="text-muted">{{ e.course.title }}</small>
+                        </td>
+                        <td>
+                            <input type="number" name="grade_{{ e.id }}" class="form-control grade-input" min="1.0"
+                                max="5.0" step="0.25" value="{{ e.final_grade|default_if_none:'' }}" required>
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit" class="btn-add-course mt-3">Compute GWA</button>
+</form>
+
+{% endif %}
+
+{% if gwa is not None %}
+<div class="schedule-wrap mt-4 p-3">
+    <h5>Computed GWA</h5>
+    <h2 class="text-success">{{ gwa }}</h2>
+</div>
+{% endif %}
+
+{% endblock %}

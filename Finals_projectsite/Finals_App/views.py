@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from collections import defaultdict
 from datetime import datetime
+from django.db.models import Q
 
 import requests
 
@@ -262,3 +263,73 @@ def holiday_api_view(request):
     }
 
     return render(request, "holidays.html", context)
+
+# ---------------- GRADE CALCULATOR ----------------
+def grade_calculator_view(request):
+    semesters = Semester.objects.filter(user=request.user)
+
+    selected_semester_id = request.GET.get('semester') or request.POST.get('semester')
+
+    selected_semester = None
+    enrolled_list = []
+    gwa = None
+
+    if selected_semester_id:
+        selected_semester = Semester.objects.filter(
+            id=selected_semester_id,
+            user=request.user
+        ).first()
+
+    if selected_semester:
+        enrolled_list = Enrolled.objects.select_related('course').filter(
+            semester=selected_semester
+        )
+
+    if request.method == "POST" and selected_semester:
+
+        total_units = 0
+        total_weighted = 0
+
+        for e in enrolled_list:
+
+            if "NSTP" in e.course.course_code.upper():
+                continue
+
+            grade_value = request.POST.get(f'grade_{e.id}')
+
+            if not grade_value:
+                continue
+
+            try:
+                grade = float(grade_value)
+            except ValueError:
+                continue
+
+            e.final_grade = grade
+            e.save()
+
+        saved_enrolled = Enrolled.objects.select_related('course').filter(
+            semester=selected_semester
+        )
+
+        for e in saved_enrolled:
+            if "NSTP" in e.course.course_code.upper():
+                continue
+
+            if e.final_grade is None:
+                continue
+
+            units = e.course.lec_units + e.course.lab_units
+
+            total_units += units
+            total_weighted += e.final_grade * units
+
+        if total_units > 0:
+            gwa = round(total_weighted / total_units, 2)
+
+    return render(request, "grade_calculator.html", {
+        "semesters": semesters,
+        "enrolled_list": enrolled_list,
+        "selected_semester_id": str(selected_semester_id) if selected_semester_id else "",
+        "gwa": gwa,
+    })

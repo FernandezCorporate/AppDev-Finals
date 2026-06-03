@@ -32,4 +32,5 @@ urlpatterns = [
     ),
 
     path('holidays/', views.holiday_api_view, name='holiday-api'),
+    path('grade-calculator/', views.grade_calculator_view, name='grade-calculator'),
 ]
