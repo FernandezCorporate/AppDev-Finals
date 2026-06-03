@@ -30,4 +30,6 @@ urlpatterns = [
         views.EnrolledDeleteView.as_view(),
         name='enrolled-delete'
     ),
+
+    path('holidays/', views.holiday_api_view, name='holiday-api'),
 ]

@@ -1,8 +1,11 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from collections import defaultdict
+from datetime import datetime
+
+import requests
 
 from Finals_App.models import Semester, Enrolled, Schedule
 from Finals_App.forms import EnrolledForm, ScheduleFormSet
@@ -231,3 +234,31 @@ class EnrolledDeleteView(DeleteView):
     model = Enrolled
     template_name = 'enrolled_del.html'
     success_url = reverse_lazy('home')
+
+# ---------------- API Views ----------------
+def holiday_api_view(request):
+    holidays = []
+    error = None
+    year = datetime.now().year
+    country_code = request.GET.get('country_code', 'PH').strip().upper()
+
+    if country_code:
+        url = f"https://date.nager.at/api/v3/PublicHolidays/{year}/{country_code}"
+
+        try:
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                holidays = response.json()
+            else:
+                error = "Invalid country code."
+        except Exception:
+            error = "Failed to fetch holidays. Please try again later."
+
+    context = {
+        "year": year,
+        "holidays": holidays,
+        "country_code": country_code,
+        "error": error
+    }
+
+    return render(request, "holidays.html", context)
