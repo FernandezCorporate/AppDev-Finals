@@ -30,22 +30,99 @@ class SemesterDetailView(DetailView):
         context = super().get_context_data(**kwargs)
 
         day_order = [
-            'Monday','Tuesday','Wednesday',
-            'Thursday','Friday','Saturday','Sunday'
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday'
         ]
 
         grouped = defaultdict(list)
 
         schedules = Schedule.objects.filter(
             enrolled__semester=self.object
-        ).select_related('enrolled__course').order_by('start_time')
+        ).select_related(
+            'enrolled__course'
+        ).order_by(
+            'day_of_week',
+            'start_time'
+        )
 
-        for s in schedules:
-            grouped[s.day_of_week].append(s)
+        PIXELS_PER_MINUTE = 1.2
+        START_HOUR = 7
+
+        calendar_events = []
+
+        for sched in schedules:
+
+            grouped[sched.day_of_week].append(sched)
+
+            start_minutes = (
+                sched.start_time.hour * 60 +
+                sched.start_time.minute
+            )
+
+            end_minutes = (
+                sched.end_time.hour * 60 +
+                sched.end_time.minute
+            )
+
+            base_minutes = START_HOUR * 60
+
+            top = (
+                start_minutes - base_minutes
+            ) * PIXELS_PER_MINUTE
+
+            height = (
+                end_minutes - start_minutes
+            ) * PIXELS_PER_MINUTE
+
+            calendar_events.append({
+                'day': sched.day_of_week,
+                'top': top,
+                'height': height,
+                'code': sched.enrolled.course.course_code,
+                'title': sched.enrolled.course.title,
+                'room': sched.room,
+                'start_time': sched.start_time,
+                'end_time': sched.end_time,
+            })
+
+        context['calendar_events'] = calendar_events
+
+        context['days'] = [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday'
+        ]
+
+        context['hours'] = [
+            '7:00 AM',
+            '8:00 AM',
+            '9:00 AM',
+            '10:00 AM',
+            '11:00 AM',
+            '12:00 PM',
+            '1:00 PM',
+            '2:00 PM',
+            '3:00 PM',
+            '4:00 PM',
+            '5:00 PM',
+            '6:00 PM',
+            '7:00 PM',
+            '8:00 PM'
+        ]
 
         context['grouped_schedules'] = {
             day: grouped[day]
-            for day in day_order if day in grouped
+            for day in day_order
+            if day in grouped
         }
 
         return context

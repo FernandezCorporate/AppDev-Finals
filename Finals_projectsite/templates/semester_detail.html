@@ -103,42 +103,42 @@
 
 </div>
 
-<div id="calendarView" style="display:none;" class="calendar-wrapper">
-    <div class="calendar-grid">
-        <div class="grid-header time-col">Time</div>
-        <div class="grid-header">Sunday</div>
-        <div class="grid-header">Monday</div>
-        <div class="grid-header">Tuesday</div>
-        <div class="grid-header">Wednesday</div>
-        <div class="grid-header">Thursday</div>
-        <div class="grid-header">Friday</div>
-        <div class="grid-header">Saturday</div>
-
-        <div class="time-label" style="grid-row: 2;">7:00 AM</div>
-        <div class="time-label" style="grid-row: 3;">8:00 AM</div>
-        <div class="time-label" style="grid-row: 4;">9:00 AM</div>
-        <div class="time-label" style="grid-row: 5;">10:00 AM</div>
-        <div class="time-label" style="grid-row: 6;">11:00 AM</div>
-        <div class="time-label" style="grid-row: 7;">12:00 PM</div>
-        <div class="time-label" style="grid-row: 8;">1:00 PM</div>
-        <div class="time-label" style="grid-row: 9;">2:00 PM</div>
-        <div class="time-label" style="grid-row: 10;">3:00 PM</div>
-        <div class="time-label" style="grid-row: 11;">4:00 PM</div>
-        <div class="time-label" style="grid-row: 12;">5:00 PM</div>
-        <div class="time-label" style="grid-row: 13;">6:00 PM</div>
-        <div class="time-label" style="grid-row: 14;">7:00 PM</div>
-        <div class="time-label" style="grid-row: 15;">8:00 PM</div>
-
-        {% for day, schedules in grouped_schedules.items %}
-            {% for sched in schedules %}
-                <div class="course-cell" style="grid-column: {{ sched.get_grid_column }}; grid-row: {{ sched.get_start_row }} / {{ sched.get_end_row }};">
-                    <div class="course-title">{{ sched.enrolled.course.course_code }}</div>
-                    <div class="course-name">{{ sched.enrolled.course.title }}</div>
-                    <div class="course-time">{{ sched.start_time|time:"g:i A" }} - {{ sched.end_time|time:"g:i A" }}</div>
-                    <div class="course-room">{{ sched.room|default_if_none:"TBA" }}</div>
-                </div>
-            {% endfor %}
+<div id="calendarView" class="calendar-wrapper" style="display:none;">
+    <div class="calendar-header">
+        <div class="time-header"></div>
+        {% for day in days %}
+            <div class="day-header">{{ day }}</div>
         {% endfor %}
+    </div>
+
+    <div class="calendar-body">
+        <div class="time-column">
+            {% for hour in hours %}
+                <div class="time-slot">{{ hour }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="days-container">
+            {% for day in days %}
+            <div class="day-column">
+                {% for event in calendar_events %}
+                    {% if event.day == day %}
+                    <div class="calendar-event"
+                         style="top: {{ event.top }}px;height: {{ event.height }}px;">
+                        <div class="event-code">{{ event.code }}</div>
+
+                        <div class="event-title">{{ event.title }}</div>
+
+                        <div class="event-time">{{ event.start_time|time:"g:i A" }}-{{ event.end_time|time:"g:i A" }}</div>
+
+                        <div class="event-room">{{ event.room|default:"TBA" }}</div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
