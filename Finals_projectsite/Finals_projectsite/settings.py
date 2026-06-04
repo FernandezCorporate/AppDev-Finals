@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Finals_App',
     'widget_tweaks',
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,35 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PWA_APP_NAME = 'SITE Scheduler and Grade Calculator'
+PWA_APP_DESCRIPTION = "A Progressive Web App version of SITE Scheduler and Grade Calculator, allowing users to access the app offline and install it on their devices for a native-like experience."
+PWA_APP_THEME_COLOR = '#0A0A0A'
+PWA_APP_BACKGROUND_COLOR = '#FFFFFF'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+{
+    'src': '/static/img/icon-192.png',
+    'sizes': '192x192'
+},
+{
+    'src': '/static/img/icon-512.png',
+    'sizes': '512x512'
+}
+]
+PWA_APP_ICONS_APPLE = [
+{
+    'src': '/static/img/icon-192.png',
+    'sizes': '192x192'
+},
+{
+    'src': '/static/img/icon-512.png',
+    'sizes': '512x512'
+}
+]
+PWA_APP_DIR = 'ltr'
+PWA_SERVICE_WORKER_PATH = BASE_DIR / 'static' / 'js' / 'serviceworker.js'

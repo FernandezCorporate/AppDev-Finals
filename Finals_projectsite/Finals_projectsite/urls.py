@@ -1,8 +1,7 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from Finals_App import views
 
-from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,5 +35,5 @@ urlpatterns = [
     path('holidays/', views.holiday_api_view, name='holiday-api'),
     path('grade-calculator/', views.grade_calculator_view, name='grade-calculator'),
 
-    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript'), name='sw.js'),
+    path('', include('pwa.urls')),
 ]
