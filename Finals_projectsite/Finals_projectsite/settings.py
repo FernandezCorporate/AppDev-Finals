@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-l^o&v*w)$m*y)x9sfu@xr8mn@vk^)xk#^ekozqv#hnu6a-t6(l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['SITESchedulerGradeCalculator.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
