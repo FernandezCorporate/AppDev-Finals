@@ -186,4 +186,4 @@ To avoid merge conflicts, the developers have also opted to finish the last feat
 Additionally, there has also been an oversight with the models of the application, specifically  for *Schedule*. On its meta, it has:
 `unique_together = ('day_of_week', 'start_time', 'room')`
 
-This creates a bug where it prevents other users from enterring a new schedule if the specific combination of day, start time, and room is already existing on the database. As observed, this is illogical since it would be common for multiple students (classmates) to input the same combination of the mentioned information.
+This creates a bug where it prevents other users from enterring a new schedule if the specific combination of day, start time, and room is already existing on the database. As observed, this is illogical since it would be common for multiple students (classmates) to input the same combination of the mentioned information. Therefore, as a solution, the value for the `Class meta` have been set to `pass`. This is not present on this repository and was changed on the *models.py* uploaded on pythonanywhere.
