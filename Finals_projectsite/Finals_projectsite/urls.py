@@ -36,4 +36,5 @@ urlpatterns = [
     path('grade-calculator/', views.grade_calculator_view, name='grade-calculator'),
 
     path('', include('pwa.urls')),
+    path('accounts/', include('allauth.urls')),
 ]
