@@ -182,3 +182,8 @@ SITE_ID = 5
 ```
 
 To avoid merge conflicts, the developers have also opted to finish the last feature on the application by manually coding it on pythonanywhere. This feature was the login persistence using *LoginRequiredMixin* for **class-based views** and *@login_required* decorator for **function-based views**. Hence, these keywords may not be present for the views.py file of this remote repository.
+
+Additionally, there has also been an oversight with the models of the application, specifically  for *Schedule*. On its meta, it has:
+`unique_together = ('day_of_week', 'start_time', 'room')`
+
+This creates a bug where it prevents other users from enterring a new schedule if the specific combination of day, start time, and room is already existing on the database. As observed, this is illogical since it would be common for multiple students (classmates) to input the same combination of the mentioned information.
